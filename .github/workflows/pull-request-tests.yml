@@ -1,0 +1,29 @@
+name: Pull Request Tests
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+  web-tests:
+    name: Run Web (React) Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Test to Web Directory
+      working-directory: ./web
+      run: |
+        npm install
+        npm test
