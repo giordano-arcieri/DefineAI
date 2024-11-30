@@ -37,22 +37,22 @@ jobs:
         # Save compiled files
         mv ./web/dist /tmp/dist
 
+        # Config git bot
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-        # Fetch the latest branches
+        # Switch to `update-dist` or create it if it doesn't exist
+        git switch update-dist || git switch -C update-dist
+        
+        # Rebase with origin/dist to include the latest history of dist
         git fetch origin
-
-        # Check if `update-dist` exists, and create or overwrite it
-        if git rev-parse --verify origin/update-dist; then
-          git switch update-dist
-        else
-          git switch -C update-dist
-        fi
-
+        git rebase origin/dist
+        
         # Overwrite the branch with compiled files
-        rm -rf *
-        mv /tmp/dist/* .
+        find . -mindepth 1 -not -name '.git' -exec rm -rf {} +  # Remove all files except .git
+        mv /tmp/dist/* .  # Move compiled files to the current directory
+
+        # Push new compiled files 
         git add .
         git commit -m "Update compiled files" || echo "No changes to commit"
         git push origin update-dist --force  # Overwrite remote branch
