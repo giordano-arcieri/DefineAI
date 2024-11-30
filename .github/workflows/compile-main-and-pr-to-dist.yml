@@ -49,7 +49,7 @@ jobs:
         git reset --hard origin/dist
         
         # Overwrite the branch with compiled files
-        find . -mindepth 1 -not -name '.git' -exec rm -rf {} +  # Remove all files except .git
+        rsync -a --delete --exclude='.git' /empty-dir/ ./
         mv /tmp/dist/* .  # Move compiled files to the current directory
 
         # Push new compiled files 
