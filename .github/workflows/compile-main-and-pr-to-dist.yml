@@ -8,7 +8,7 @@ on:
 
   # Allow manual triggering of the workflow
   workflow_dispatch:
-    
+
 jobs:
   compile-and-pr:
     runs-on: ubuntu-latest
@@ -26,12 +26,14 @@ jobs:
 
     # Step 3: Install dependencies and build the project
     - name: Install dependencies and build
+      working-directory: ./web  # Ensure the build happens in the correct folder
       run: |
         npm install
         npm run build  # Build the project to dist folder
 
     # Step 4: Create or update the `update-dist` branch
     - name: Create or update update-dist branch
+      working-directory: ./web  # Ensure the build happens in the correct folder
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
