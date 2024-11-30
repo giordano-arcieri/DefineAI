@@ -33,8 +33,10 @@ jobs:
 
     # Step 4: Create or update the `update-dist` branch
     - name: Create or update update-dist branch
-      working-directory: ./web  # Ensure the build happens in the correct folder
       run: |
+        # Save compiled files
+        mv ./web/dist /tmp/dist
+
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -49,7 +51,8 @@ jobs:
         fi
 
         # Overwrite the branch with compiled files
-        rsync -a --delete ./dist/ ./  # Sync the compiled files
+        rm -rf *
+        mv /tmp/dist/* .
         git add .
         git commit -m "Update compiled files" || echo "No changes to commit"
         git push origin update-dist --force  # Overwrite remote branch
